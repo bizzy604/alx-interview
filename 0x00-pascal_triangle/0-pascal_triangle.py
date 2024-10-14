@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """
 Module 0-pascal_triangle
 """
