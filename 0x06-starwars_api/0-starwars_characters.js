@@ -9,21 +9,21 @@ if (process.argv.length !== 3) {
 
 const movieId = process.argv[2];
 
-request(`${API_URL}/films/${movieId}/`, (err, _, body) => {
+request(`${API_URL}/films/${movieId}/`, (err, response, body) => {
   if (err) {
-    console.log("Error: Unable to connect to the Star Wars API");
+    console.error("Error: Unable to connect to the Star Wars API");
     return;
   }
 
-  if (_.statusCode !== 200) {
-    console.log("Error: Movie not found");
+  if (response.statusCode !== 200) {
+    console.error("Error: Movie not found");
     return;
   }
 
   const charactersURL = JSON.parse(body).characters;
   const charactersName = charactersURL.map(
     url => new Promise((resolve, reject) => {
-      request(url, (promiseErr, __, charactersReqBody) => {
+      request(url, (promiseErr, _, charactersReqBody) => {
         if (promiseErr) {
           reject(`Error: Could not retrieve character data from ${url}`);
         } else {
@@ -35,5 +35,5 @@ request(`${API_URL}/films/${movieId}/`, (err, _, body) => {
 
   Promise.all(charactersName)
     .then(names => console.log(names.join('\n')))
-    .catch(allErr => console.log(allErr));
+    .catch(allErr => console.error(allErr));
 });
